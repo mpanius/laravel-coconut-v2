@@ -1,84 +1,97 @@
-# Very short description of the package
+# PHP client library for encoding videos with Coconut
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/nidhalkratos/laravel-coconut-v2.svg?style=flat-square)](https://packagist.org/packages/nidhalkratos/laravel-coconut-v2)
-[![Total Downloads](https://img.shields.io/packagist/dt/nidhalkratos/laravel-coconut-v2.svg?style=flat-square)](https://packagist.org/packages/nidhalkratos/laravel-coconut-v2)
+## Install
 
-A laravel wrapper package for coconut transcoding api. 
-Check the official php library at `https://github.com/opencoconut/coconutphp` for more
+To install the Coconut PHP library, you need [composer](http://getcomposer.org) first:
 
-## Installation
-
-You can install the package via composer:
-
-```bash
-composer require nidhalkratos/laravel-coconut-v2
+```console
+curl -sS https://getcomposer.org/installer | php
 ```
 
-## Usage
-Set these environment variables to let coconut connect to the gcs bucket
-```bash
-# .env
-COCONUT_API_KEY=
-COCONUT_GCS_BUCKET=
-COCONUT_GCS_KEY=
-COCONUT_GCS_SECRET=
+Edit `composer.json`:
+
+```javascript
+{
+    "require": {
+        "coconut/coconutphp": "2.*"
+    }
+}
 ```
 
-The package will fire an event whenever a coconut sends a notification
-and thus you need to create a listeners for the event to fire whenever the event is fired
-Coconut will send webhook events to the route named coconut.callback (Created by the package)
+Install the depencies by executing `composer`:
+
+```console
+php composer.phar install
+```
+
+## Submitting the job
+
+Use the [API Request Builder](https://app.coconut.co/job/new) to generate a config file that match your specific workflow.
+
+Example of `coconut.conf`:
+
+```ini
+var s3 = s3://accesskey:secretkey@mybucket
+
+set webhook = http://mysite.com/webhook/coconut?videoID=$vid
+
+-> mp4  = $s3/videos/video_$vid.mp4
+-> webm = $s3/videos/video_$vid.webm
+-> jpg_300x = $s3/previews/thumbs_#num#.jpg, number=3
+```
+
+Here is the PHP code to submit the config file:
 
 ```php
-// Create a coconut instance
-$coconut = app('coconut');
-$coconut->notification = [
-    'type' => 'http',
-    'url' =>  route('coconut.callback',$this->id),
-    'metadata' => true
-];
+<?php
 
-//Parameters
-$jobParams = [
-    'input' => ['url' => $this->rawUrl()],
-    'outputs' => [
-        'jpg:720x' => Storage::disk('gcs')->path($this->THUMBNAIL_DIRECTORY_PATH . $this->id . '.jpg') 
-    ]
-];
+$job = Coconut_Job::create(array(
+  'api_key' => 'k-api-key',
+  'conf' => 'heywatch.conf',
+  'source' => 'http://yoursite.com/media/video.mp4',
+  'vars' => array('vid' => 1234)
+));
 
-//Create the job
-$job = $coconut->job->create($jobParams);
+if($job->{'status'} == 'ok') {
+  echo $job->{'id'};
+} else {
+  echo $job->{'error_code'};
+  echo $job->{'error_message'};
+}
 
+?>
 ```
 
+You can also create a job without a config file. To do that you will need to give every settings in the method parameters. Here is the exact same job but without a config file:
 
+```php
+<?php
 
-### Testing
+$vid = 1234;
+$s3 = 's3://accesskey:secretkey@mybucket';
 
-```bash
-composer test
+$job = Coconut_Job::create(array(
+  'api_key' => 'k-api-key',
+  'source' => 'http://yoursite.com/media/video.mp4',
+  'webhook' => 'http://mysite.com/webhook/coconut?videoId=' . $vid,
+  'outputs' => array(
+    'mp4' => $s3 . '/videos/video_' . $vid . '.mp4',
+    'webm' => $s3 . '/videos/video_' . $vid . '.webm',
+    'jpg_300x' => $s3 . '/previews/thumbs_#num#.jpg, number=3'
+  )
+));
+
+?>
 ```
 
-### Changelog
+Note that you can use the environment variable `COCONUT_API_KEY` to set your API key.
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+*Released under the [MIT license](http://www.opensource.org/licenses/mit-license.php).*
 
-## Contributing
+---
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-### Security
-
-If you discover any security related issues, please email nidhalkratos@gmail.com instead of using the issue tracker.
-
-## Credits
-
--   [Nidhal Abidi](https://github.com/nidhalkratos)
--   [All Contributors](../../contributors)
-
-## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
+* Coconut website: http://coconut.co
+* API documentation: http://coconut.co/docs
+* Github: http://github.com/opencoconut/coconut.rb
+* Contact: [support@coconut.co](mailto:support@coconut.co)
+* Twitter: [@OpenCoconut](http://twitter.com/opencoconut)
