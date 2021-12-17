@@ -15,11 +15,42 @@ composer require nidhalkratos/laravel-coconut-v2
 ```
 
 ## Usage
+Set these environment variables to let coconut connect to the gcs bucket
+```bash
+# .env
+COCONUT_API_KEY=
+COCONUT_GCS_BUCKET=
+COCONUT_GCS_KEY=
+COCONUT_GCS_SECRET=
+```
+
+The package will fire an event whenever a coconut sends a notification
+and thus you need to create a listeners for the event to fire whenever the event is fired
+Coconut will send webhook events to the route named coconut.callback (Created by the package)
 
 ```php
-// Usage description here
+// Create a coconut instance
+$coconut = app('coconut');
+$coconut->notification = [
+    'type' => 'http',
+    'url' =>  route('coconut.callback',$this->id),
+    'metadata' => true
+];
+
+//Parameters
+$jobParams = [
+    'input' => ['url' => $this->rawUrl()],
+    'outputs' => [
+        'jpg:720x' => Storage::disk('gcs')->path($this->THUMBNAIL_DIRECTORY_PATH . $this->id . '.jpg') 
+    ]
+];
+
+//Create the job
+$job = $coconut->job->create($jobParams);
 
 ```
+
+
 
 ### Testing
 

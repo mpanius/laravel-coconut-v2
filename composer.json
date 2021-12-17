@@ -45,7 +45,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Nidhalkratos\\LaravelCoconut\\Providers\\CoconutProvider"
+                "Nidhalkratos\\LaravelCoconut\\CoconutProvider"
             ]
         }
     }
