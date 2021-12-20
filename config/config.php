@@ -40,5 +40,10 @@ return [
 
     ],
 
+    /**
+     * Middlewares to add to the webhook route
+     */
+    'middleware' => []
+
     
 ];
