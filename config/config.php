@@ -44,6 +44,7 @@ return [
 
         'minio-s3' => [
             'service' => 's3other',
+            'region' => env('COCONUT_S3_REGION',null),
             'bucket' => env('COCONUT_S3_BUCKET',null),
             'credentials' => [
                 'access_key_id' => env('COCONUT_S3_KEY', null),
