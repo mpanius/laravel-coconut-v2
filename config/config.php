@@ -6,7 +6,7 @@ return [
     /**
      * Default storage
      */
-    'storage' => 'gcs',
+    'storage' => 'minio-s3',
 
     'storages' => [
 
@@ -36,6 +36,20 @@ return [
                 'secret_access_key' => env('COCONUT_S3_SECRET', null)
             ],
             'path' => '/'
+        ],
+
+        /**
+         * Minio S3 compatible storage
+         */
+
+        'minio-s3' => [
+            'service' => 's3other',
+            'bucket' => env('COCONUT_S3_BUCKET',null),
+            'credentials' => [
+                'access_key_id' => env('COCONUT_S3_KEY', null),
+                'secret_access_key' => env('COCONUT_S3_SECRET', null)
+            ],
+            "endpoint" => env('COCONUT_S3_ENDPOINT', null)
         ]
 
     ],
@@ -45,5 +59,5 @@ return [
      */
     'middleware' => []
 
-    
+
 ];
