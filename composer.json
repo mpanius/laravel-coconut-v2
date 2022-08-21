@@ -5,6 +5,12 @@
         "nidhalkratos",
         "laravel-coconut-v2"
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./coconutphp"
+        }
+    ],
     "homepage": "https://github.com/nidhalkratos/laravel-coconut-v2",
     "license": "MIT",
     "type": "library",
@@ -17,7 +23,7 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "opencoconut/coconut": "^3.0"
+        "opencoconut/coconut": "*"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
