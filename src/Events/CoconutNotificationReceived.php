@@ -17,5 +17,6 @@ class CoconutNotificationReceived
     {
         $this->videoId = $videoId;
         $this->params = $params;
+
     }
 }
