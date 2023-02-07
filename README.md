@@ -1,102 +1,84 @@
-# Coconut PHP Library
+# Very short description of the package
 
-The Coconut PHP library provides access to the Coconut API for encoding videos, packaging media files into HLS and MPEG-Dash, generating thumbnails and GIF animation.
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/nidhalkratos/laravel-coconut-v2.svg?style=flat-square)](https://packagist.org/packages/nidhalkratos/laravel-coconut-v2)
+[![Total Downloads](https://img.shields.io/packagist/dt/nidhalkratos/laravel-coconut-v2.svg?style=flat-square)](https://packagist.org/packages/nidhalkratos/laravel-coconut-v2)
 
-This library is only compatible with the Coconut API v2.
-
-## Documentation
-
-See the [full documentation](https://docs.coconut.co).
+A laravel wrapper package for coconut transcoding api. 
+Check the official php library at `https://github.com/opencoconut/coconutphp` for more
 
 ## Installation
 
-To install the Coconut PHP library, you need [composer](http://getcomposer.org) first:
+You can install the package via composer:
 
-```console
-curl -sS https://getcomposer.org/installer | php
-```
-
-Edit `composer.json`:
-
-```javascript
-{
-    "require": {
-        "opencoconut/coconut": "3.*"
-    }
-}
-```
-
-Install the depencies by executing `composer`:
-
-```console
-php composer.phar install
+```bash
+composer require nidhalkratos/laravel-coconut-v2
 ```
 
 ## Usage
+Set these environment variables to let coconut connect to the gcs bucket
+```bash
+# .env
+COCONUT_API_KEY=
+COCONUT_GCS_BUCKET=
+COCONUT_GCS_KEY=
+COCONUT_GCS_SECRET=
+```
 
-The library needs you to set your API key which can be found in your [dashboard](https://app.coconut.co/api). Webhook URL and storage settings are optional but are very convenient because you set them only once.
+The package will fire an event whenever a coconut sends a notification
+and thus you need to create a listeners for the event to fire whenever the event is fired
+Coconut will send webhook events to the route named coconut.callback (Created by the package)
 
 ```php
-<?php
-
-require_once('vendor/autoload.php');
-
-$coconut = new Coconut\Client('k-api-key');
-
+// Create a coconut instance
+$coconut = app('coconut');
 $coconut->notification = [
-  'type' => 'http',
-  'url' => 'https://yoursite/api/coconut/webhook'
+    'type' => 'http',
+    'url' =>  route('coconut.callback',$this->id),
+    'metadata' => true
 ];
 
-$coconut->storage = [
-  'service' => 's3',
-  'bucket' => 'my-bucket',
-  'region' => 'us-east-1',
-  'credentials' => [
-    'access_key_id' => 'access-key',
-    'secret_access_key' => 'secret-key'
-  ]
-];
-
-?>
-```
-
-## Creating a job
-
-```php
-<?php
-
-try {
-  $job = $coconut->job->create([
-    'input' => [ 'url' => 'https://mysite/path/file.mp4' ],
+//Parameters
+$jobParams = [
+    'input' => ['url' => $this->rawUrl()],
     'outputs' => [
-      'jpg:300x' => [ 'path' => '/image.jpg' ],
-      'mp4:1080p' => [ 'path' => '/1080p.mp4' ],
-      'httpstream' => [
-        'hls' => [ 'path' => 'hls/' ]
-      ]
+        'jpg:720x' => Storage::disk('gcs')->path($this->THUMBNAIL_DIRECTORY_PATH . $this->id . '.jpg') 
     ]
-  ]);
+];
 
-  print_r($job);
+//Create the job
+$job = $coconut->job->create($jobParams);
 
-} cacth(Exception $e) {
-  echo $e->getMessage();
-}
-
-?>
 ```
 
-## Getting information about a job
 
-```php
-$job = $coconut->job->retrieve('OolQXaiU86NFki');
+
+### Testing
+
+```bash
+composer test
 ```
 
-## Retrieving metadata
+### Changelog
 
-```php
-$metadata = $coconut->metadata->retrieve('OolQXaiU86NFki');
-```
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
-*Released under the [MIT license](http://www.opensource.org/licenses/mit-license.php).*
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+### Security
+
+If you discover any security related issues, please email nidhalkratos@gmail.com instead of using the issue tracker.
+
+## Credits
+
+-   [Nidhal Abidi](https://github.com/nidhalkratos)
+-   [All Contributors](../../contributors)
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Laravel Package Boilerplate
+
+This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).

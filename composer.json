@@ -1,24 +1,57 @@
 {
-    "name": "opencoconut/coconut",
-    "type": "library",
-    "version": "3.0.3",
-    "description": "Coconut is a Cloud Video Encoding Service built for developers",
-    "keywords": ["video", "encoding", "transcoding", "web service", "h264", "cloud"],
-    "homepage": "https://coconut.co",
-    "license": "MIT",
-    "authors": [
+    "name": "nidhalkratos/laravel-coconut-v2",
+    "description": "A Wrapper around coconut transcoding library for laravel",
+    "keywords": [
+        "nidhalkratos",
+        "laravel-coconut-v2"
+    ],
+    "repositories": [
         {
-            "name": "Bruno Celeste",
-            "email": "bruno@coconut.co",
-            "homepage": "http://coconut.co"
+            "type": "path",
+            "url": "./coconutphp"
         }
     ],
-    "autoload": {
-        "psr-4": {
-            "Coconut\\": "src/"
+    "homepage": "https://github.com/nidhalkratos/laravel-coconut-v2",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Nidhal Abidi",
+            "email": "nidhalkratos@gmail.com",
+            "role": "Developer"
         }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "opencoconut/coconut": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "7"
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nidhalkratos\\LaravelCoconut\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nidhalkratos\\LaravelCoconut\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Nidhalkratos\\LaravelCoconut\\CoconutProvider"
+            ]
+        }
     }
 }
