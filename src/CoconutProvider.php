@@ -1,6 +1,7 @@
 <?php
 
 namespace Nidhalkratos\LaravelCoconut;
+
 use Illuminate\Support\ServiceProvider;
 
 class CoconutProvider extends ServiceProvider
@@ -32,9 +33,9 @@ class CoconutProvider extends ServiceProvider
             return new \Coconut\Client(
                 config('coconut.api_key'),
                 [
-                    'storage' => config('coconut.storages')[config('coconut.storage')]
+                    'storage' => config('coconut.storages')[config('coconut.storage')],
                 ]
-                
+
             );
         });
     }

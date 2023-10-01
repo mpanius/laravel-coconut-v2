@@ -1,8 +1,7 @@
 <?php
 
 return [
-    'api_key' => env('COCONUT_API_KEY',null),
-
+    'api_key' => env('COCONUT_API_KEY', null),
 
     /**
      * Default storage
@@ -14,51 +13,48 @@ return [
         /**
          * Google cloud storage https://docs.coconut.co/jobs/storage#google-cloud-storage
          */
-        'gcs' =>  [
+        'gcs' => [
             'service' => 'gcs',
-            'bucket' => env('COCONUT_GCS_BUCKET',null),
+            'bucket' => env('COCONUT_GCS_BUCKET', null),
             'credentials' => [
                 'access_key_id' => env('COCONUT_GCS_KEY', null),
-                'secret_access_key' => env('COCONUT_GCS_SECRET', null)
+                'secret_access_key' => env('COCONUT_GCS_SECRET', null),
             ],
-            'path' => '/'
+            'path' => '/',
         ],
 
         /**
          * AWS S3 storage https://docs.coconut.co/jobs/storage#aws-s3
          */
-
         'aws-s3' => [
             'service' => 's3',
-            'region' => env('COCONUT_S3_REGION',null),
-            'bucket' => env('COCONUT_S3_BUCKET',null),
+            'region' => env('COCONUT_S3_REGION', null),
+            'bucket' => env('COCONUT_S3_BUCKET', null),
             'credentials' => [
                 'access_key_id' => env('COCONUT_S3_KEY', null),
-                'secret_access_key' => env('COCONUT_S3_SECRET', null)
+                'secret_access_key' => env('COCONUT_S3_SECRET', null),
             ],
-            'path' => '/'
+            'path' => '/',
         ],
 
         /**
          * Minio S3 compatible storage
          */
-
         'minio-s3' => [
             'service' => 's3other',
-            'bucket' => env('COCONUT_S3_BUCKET',null),
+            'bucket' => env('COCONUT_S3_BUCKET', null),
             'credentials' => [
                 'access_key_id' => env('COCONUT_S3_KEY', null),
-                'secret_access_key' => env('COCONUT_S3_SECRET', null)
+                'secret_access_key' => env('COCONUT_S3_SECRET', null),
             ],
-            "endpoint" => env('COCONUT_S3_ENDPOINT', null)
-        ]
+            'endpoint' => env('COCONUT_S3_ENDPOINT', null),
+        ],
 
     ],
 
     /**
      * Middlewares to add to the webhook route
      */
-    'middleware' => []
-
+    'middleware' => [],
 
 ];
