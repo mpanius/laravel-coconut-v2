@@ -6,48 +6,26 @@ return [
     /**
      * Default storage
      */
-    'storage' => 'minio-s3',
+    'storage' => 'ceph',
 
     'storages' => [
 
-        /**
-         * Google cloud storage https://docs.coconut.co/jobs/storage#google-cloud-storage
-         */
-        'gcs' => [
-            'service' => 'gcs',
-            'bucket' => env('COCONUT_GCS_BUCKET', null),
-            'credentials' => [
-                'access_key_id' => env('COCONUT_GCS_KEY', null),
-                'secret_access_key' => env('COCONUT_GCS_SECRET', null),
-            ],
-            'path' => '/',
-        ],
 
-        /**
-         * AWS S3 storage https://docs.coconut.co/jobs/storage#aws-s3
-         */
-        'aws-s3' => [
-            'service' => 's3',
-            'region' => env('COCONUT_S3_REGION', null),
-            'bucket' => env('COCONUT_S3_BUCKET', null),
-            'credentials' => [
-                'access_key_id' => env('COCONUT_S3_KEY', null),
-                'secret_access_key' => env('COCONUT_S3_SECRET', null),
-            ],
-            'path' => '/',
-        ],
 
         /**
          * Minio S3 compatible storage
          */
-        'minio-s3' => [
+        'ceph' => [
             'service' => 's3other',
-            'bucket' => env('COCONUT_S3_BUCKET', null),
+            'bucket' => env('COCONUT_S3_BUCKET'),
+            'force_path_style' => true,
+            'region' => env('COCONUT_S3_REGION'),
             'credentials' => [
-                'access_key_id' => env('COCONUT_S3_KEY', null),
-                'secret_access_key' => env('COCONUT_S3_SECRET', null),
+                'access_key_id' => env('COCONUT_S3_KEY'),
+                'secret_access_key' => env('COCONUT_S3_SECRET'),
             ],
-            'endpoint' => env('COCONUT_S3_ENDPOINT', null),
+            'endpoint' => env('COCONUT_S3_ENDPOINT'),
+
         ],
 
     ],
